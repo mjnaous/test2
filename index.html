@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Upload Site</title>
+    <title>Admin Image Upload</title>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400&display=swap" rel="stylesheet">
     <style>
         body {
@@ -23,18 +23,53 @@
         }
         .upload {
             margin-top: 20px;
+            display: none; /* Hide upload by default */
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            max-height: 400px;
         }
     </style>
 </head>
 <body>
     <div class="date" id="current-date"></div>
-    <input type="file" class="upload" accept="image/*">
-    
+    <input type="password" id="admin-password" placeholder="Enter admin password">
+    <input type="file" class="upload" id="file-upload" accept="image/*">
+    <img id="displayed-image" alt="Uploaded Image" style="display:none;">
+
     <script>
         // Display current date
         const dateElement = document.getElementById('current-date');
         const today = new Date();
         dateElement.textContent = today.toLocaleDateString();
+
+        // Admin password
+        const ADMIN_PASSWORD = 'mjn'; // Change this to a secure password
+
+        // Handle password input
+        document.getElementById('admin-password').addEventListener('input', function() {
+            const password = this.value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('file-upload').style.display = 'block'; // Show upload button
+            } else {
+                document.getElementById('file-upload').style.display = 'none'; // Hide upload button
+            }
+        });
+
+        // Display uploaded image
+        document.getElementById('file-upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('displayed-image');
+                    img.src = e.target.result;
+                    img.style.display = 'block'; // Show the image
+                }
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
 </body>
 </html>
